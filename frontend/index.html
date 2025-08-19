@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresh Produce - Farm to Table</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-leaf"></i>
+                <span>Fresh Produce</span>
+            </div>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#products" class="nav-link">Products</a>
+                </li>
+                <li class="nav-item customer-only" style="display: none;">
+                    <a href="#cart" class="nav-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        Cart (<span id="cart-count">0</span>)
+                    </a>
+                </li>
+                <li class="nav-item admin-only" style="display: none;">
+                    <a href="#admin" class="nav-link">Admin Dashboard</a>
+                </li>
+                <li class="nav-item" id="auth-section">
+                    <a href="#login" class="nav-link" id="login-btn">Login</a>
+                </li>
+            </ul>
+            
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Fresh Produce from Farm to Table</h1>
+                <p>Discover the finest selection of fresh vegetables, fruits, and curated produce boxes delivered straight to your door.</p>
+                <button class="cta-button" onclick="showSection('products')">Shop Now</button>
+            </div>
+            <div class="hero-image">
+                <i class="fas fa-carrot" style="font-size: 8rem; color: #ff6b35;"></i>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="products" class="section">
+            <div class="container">
+                <h2>Our Products</h2>
+                
+                <!-- Search and Filter Controls -->
+                <div class="filter-controls">
+                    <div class="search-box">
+                        <input type="text" id="product-search" placeholder="Search products...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    
+                    <select id="category-filter">
+                        <option value="">All Categories</option>
+                    </select>
+                    
+                    <div class="price-filter">
+                        <input type="number" id="min-price" placeholder="Min Price" min="0" step="0.01">
+                        <input type="number" id="max-price" placeholder="Max Price" min="0" step="0.01">
+                    </div>
+                    
+                    <select id="availability-filter">
+                        <option value="">All Products</option>
+                        <option value="available">Available</option>
+                        <option value="out_of_stock">Out of Stock</option>
+                    </select>
+                </div>
+                
+                <!-- Products Grid -->
+                <div class="products-grid" id="products-grid">
+                    <!-- Products will be loaded here -->
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination" id="pagination">
+                    <!-- Pagination controls will be added here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Cart Section -->
+        <section id="cart" class="section customer-only" style="display: none;">
+            <div class="container">
+                <h2>Shopping Cart</h2>
+                <div class="cart-content">
+                    <div class="cart-items" id="cart-items">
+                        <!-- Cart items will be loaded here -->
+                    </div>
+                    <div class="cart-summary">
+                        <h3>Order Summary</h3>
+                        <div class="summary-line">
+                            <span>Total Items:</span>
+                            <span id="cart-total-items">0</span>
+                        </div>
+                        <div class="summary-line">
+                            <span>Total Price:</span>
+                            <span id="cart-total-price">$0.00</span>
+                        </div>
+                        <button class="checkout-btn" id="checkout-btn" onclick="showCheckout()">
+                            Proceed to Checkout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Checkout Section -->
+        <section id="checkout" class="section customer-only" style="display: none;">
+            <div class="container">
+                <h2>Checkout</h2>
+                <form id="checkout-form" class="checkout-form">
+                    <div class="form-group">
+                        <label for="delivery-date">Delivery Date:</label>
+                        <input type="date" id="delivery-date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="delivery-address">Delivery Address:</label>
+                        <textarea id="delivery-address" required placeholder="Enter your delivery address"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="order-notes">Special Instructions (Optional):</label>
+                        <textarea id="order-notes" placeholder="Any special delivery instructions..."></textarea>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <h3>Order Summary</h3>
+                        <div id="checkout-items"></div>
+                        <div class="total-section">
+                            <div class="summary-line">
+                                <span>Subtotal:</span>
+                                <span id="checkout-subtotal">$0.00</span>
+                            </div>
+                            <div class="summary-line">
+                                <span>Tax (10%):</span>
+                                <span id="checkout-tax">$0.00</span>
+                            </div>
+                            <div class="summary-line total">
+                                <span>Total:</span>
+                                <span id="checkout-total">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="place-order-btn">Place Order</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard -->
+        <section id="admin" class="section admin-only" style="display: none;">
+            <div class="container">
+                <h2>Admin Dashboard</h2>
+                
+                <!-- Dashboard Stats -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <h3>Today's Sales</h3>
+                        <div class="stat-value" id="daily-revenue">$0.00</div>
+                        <div class="stat-label" id="daily-orders">0 orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Weekly Sales</h3>
+                        <div class="stat-value" id="weekly-revenue">$0.00</div>
+                        <div class="stat-label" id="weekly-orders">0 orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Monthly Sales</h3>
+                        <div class="stat-value" id="monthly-revenue">$0.00</div>
+                        <div class="stat-label" id="monthly-orders">0 orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Low Stock Items</h3>
+                        <div class="stat-value" id="low-stock-count">0</div>
+                        <div class="stat-label">products</div>
+                    </div>
+                </div>
+                
+                <!-- Admin Tabs -->
+                <div class="admin-tabs">
+                    <button class="tab-button active" onclick="showAdminTab('orders')">Orders</button>
+                    <button class="tab-button" onclick="showAdminTab('products')">Products</button>
+                    <button class="tab-button" onclick="showAdminTab('customers')">Customers</button>
+                    <button class="tab-button" onclick="showAdminTab('inventory')">Inventory</button>
+                </div>
+                
+                <!-- Orders Management -->
+                <div id="admin-orders" class="admin-tab-content active">
+                    <div class="tab-header">
+                        <h3>Order Management</h3>
+                        <div class="order-filters">
+                            <select id="order-status-filter">
+                                <option value="">All Orders</option>
+                                <option value="new">New</option>
+                                <option value="in_process">In Process</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="orders-table" id="orders-table">
+                        <!-- Orders will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Products Management -->
+                <div id="admin-products" class="admin-tab-content">
+                    <div class="tab-header">
+                        <h3>Product Management</h3>
+                        <button class="add-btn" onclick="showAddProductModal()">
+                            <i class="fas fa-plus"></i> Add Product
+                        </button>
+                    </div>
+                    <div class="products-table" id="admin-products-table">
+                        <!-- Products will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Customers Management -->
+                <div id="admin-customers" class="admin-tab-content">
+                    <div class="tab-header">
+                        <h3>Customer Management</h3>
+                    </div>
+                    <div class="customers-table" id="customers-table">
+                        <!-- Customers will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Inventory Management -->
+                <div id="admin-inventory" class="admin-tab-content">
+                    <div class="tab-header">
+                        <h3>Inventory Management</h3>
+                    </div>
+                    <div class="inventory-alerts" id="inventory-alerts">
+                        <!-- Low stock alerts will be loaded here -->
+                    </div>
+                    <div class="stock-movements" id="stock-movements">
+                        <!-- Stock movement history will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- User Profile Section -->
+        <section id="profile" class="section" style="display: none;">
+            <div class="container">
+                <h2>My Profile</h2>
+                <form id="profile-form" class="profile-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first-name">First Name:</label>
+                            <input type="text" id="first-name" name="first_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Last Name:</label>
+                            <input type="text" id="last-name" name="last_name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone:</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Address:</label>
+                        <textarea id="address" name="address" placeholder="Your address"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="save-btn">Save Changes</button>
+                </form>
+                
+                <!-- Order History for Customers -->
+                <div class="customer-only" style="display: none;">
+                    <h3>Order History</h3>
+                    <div class="order-history" id="order-history">
+                        <!-- Order history will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('login-modal')">&times;</span>
+            <h2>Login</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">Username:</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+            <p class="modal-footer">
+                Don't have an account? 
+                <a href="#" onclick="showModal('register-modal'); closeModal('login-modal')">Register here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('register-modal')">&times;</span>
+            <h2>Register</h2>
+            <form id="register-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reg-first-name">First Name:</label>
+                        <input type="text" id="reg-first-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-last-name">Last Name:</label>
+                        <input type="text" id="reg-last-name" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-username">Username:</label>
+                    <input type="text" id="reg-username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-email">Email:</label>
+                    <input type="email" id="reg-email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-phone">Phone:</label>
+                    <input type="tel" id="reg-phone">
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-address">Address:</label>
+                    <textarea id="reg-address"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reg-password">Password:</label>
+                        <input type="password" id="reg-password" required minlength="8">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password-confirm">Confirm Password:</label>
+                        <input type="password" id="reg-password-confirm" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-user-type">Account Type:</label>
+                    <select id="reg-user-type" required>
+                        <option value="customer">Customer</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="submit-btn">Register</button>
+            </form>
+            <p class="modal-footer">
+                Already have an account? 
+                <a href="#" onclick="showModal('login-modal'); closeModal('register-modal')">Login here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content large">
+            <span class="close" onclick="closeModal('product-modal')">&times;</span>
+            <div class="product-details" id="product-details">
+                <!-- Product details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="product-form-modal" class="modal">
+        <div class="modal-content large">
+            <span class="close" onclick="closeModal('product-form-modal')">&times;</span>
+            <h2 id="product-form-title">Add Product</h2>
+            <form id="product-form" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product-name">Product Name:</label>
+                        <input type="text" id="product-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-category">Category:</label>
+                        <select id="product-category" required>
+                            <!-- Categories will be loaded here -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-description">Description:</label>
+                    <textarea id="product-description" required></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product-price">Price:</label>
+                        <input type="number" id="product-price" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-unit">Unit:</label>
+                        <input type="text" id="product-unit" placeholder="kg, pieces, boxes" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product-stock">Stock Quantity:</label>
+                        <input type="number" id="product-stock" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-threshold">Low Stock Threshold:</label>
+                        <input type="number" id="product-threshold" min="1" value="10" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-status">Availability Status:</label>
+                    <select id="product-status" required>
+                        <option value="available">Available</option>
+                        <option value="out_of_stock">Out of Stock</option>
+                        <option value="discontinued">Discontinued</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-image">Product Image:</label>
+                    <input type="file" id="product-image" accept="image/*">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('product-form-modal')" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="submit-btn">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
